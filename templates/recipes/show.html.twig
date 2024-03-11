@@ -11,5 +11,12 @@
     <p>
         {{ recipe.description | nl2br }}
     </p>
+
+    <p>
+        <a href="{{ url('recipes.edit', {id: recipe.id}) }}"
+           class="btn btn-primary">
+            Editer
+        </a>
+    </p>
 </div>
 {% endblock %}

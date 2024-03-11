@@ -5,17 +5,48 @@
 {% block body %}
 
 <div>
+    <h1>
+        Liste des recipes
+    </h1>
     <p>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad adipisci aliquid, asperiores blanditiis cupiditate, distinctio dolores enim eos illum incidunt ipsam laboriosam laborum necessitatibus nesciunt odit, perspiciatis quae saepe!
+        <a class="btn btn-primary btn-sm"
+           href="{{ url('recipes.create') }}">
+            Créer une nouvelle recipe
+        </a>
     </p>
-    <ul>
-        {% for recipe in recipes %}
-        <li>
-            <a href="{{ url('recipes.show', {id: recipe.id, slug: recipe.slug}) }}">
-                {{ recipe.label }}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for recipe in recipes %}
+                <tr>
+                    <td>
+                        <a href="{{ url('recipes.show', {id: recipe.id, slug: recipe.slug}) }}">
+                            {{  recipe.label }}
+                        </a>
+                    </td>
+                    <td>
+                        <div class="d-flex gap-1">
+                            <a class="btn btn-primary btn-sm"
+                               href="{{ url('recipes.edit', {id: recipe.id}) }}">
+                                Editer
+                            </a>
+                            <form method="POST"
+                                  action="{{ url('recipes.delete', {id: recipe.id}) }}">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button class="btn btn-danger btn-sm">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

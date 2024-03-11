@@ -66,7 +66,7 @@ class Recipe
         return $this->slug;
     }
 
-    public function setSlug(string $slug): static
+    public function setSlug(?string $slug = null): static
     {
         $this->slug = $slug;
 
