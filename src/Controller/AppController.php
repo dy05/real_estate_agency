@@ -10,7 +10,6 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -60,21 +59,5 @@ class AppController extends AbstractController
         return $this->render('app/contact.html.twig', [
              'form' => $form->createView(),
         ]);
-    }
-
-    /**
-     * @param HttpExceptionInterface $exception
-     *
-     * @return Response
-     */
-    public function notFound(HttpExceptionInterface $exception): Response
-    {
-//        return new Response('Not found', $exception->getStatusCode());
-        return new Response(
-            $this->renderView('bundles/TwigBundle/Exception/error404.html.twig', [
-                'message' => 'Something went wrong.',
-            ]),
-            $exception->getStatusCode()
-        );
     }
 }
