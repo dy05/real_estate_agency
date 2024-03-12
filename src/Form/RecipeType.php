@@ -9,11 +9,16 @@ use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\Validator\Constraints\GroupSequence;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Sequentially;
 
 class RecipeType extends AbstractType
 {
@@ -21,16 +26,24 @@ class RecipeType extends AbstractType
     {
         $builder
             ->add('label', TextType::class, [
-                'label' => 'Titre'
+                'label' => 'Titre',
+                'empty_data' => '',
             ])
-            ->add('description')
+            ->add('description', TextareaType::class, [
+                'empty_data' => '',
+            ])
             ->add('slug', TextType::class, [
-                'required' => false
+                'required' => false,
+                'empty_data' => '',
+                'constraints' => new Sequentially([
+                    new Length(null, 5),
+                    new Regex('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', "Entrez un slug valide."),
+                ]),
             ])
 //            ->add('createdAt')
 //            ->add('updatedAt')
             ->add('duration', NumberType::class, [
-                'required' => false
+                'required' => false,
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Valider'
@@ -69,6 +82,7 @@ class RecipeType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Recipe::class,
+            'validation_groups' => new GroupSequence(['Default', 'Extra']),
         ]);
     }
 }

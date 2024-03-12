@@ -3,9 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\RecipeRepository;
+use App\Validator\BanWord;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
+#[UniqueEntity('label', groups: ['Extra'])]
+#[UniqueEntity('slug', groups: ['Extra'])]
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 class Recipe
 {
@@ -14,21 +20,25 @@ class Recipe
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[BanWord]
     #[ORM\Column(length: 255)]
-    private ?string $label = null;
+    private string $label = '';
 
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
+    private string $description = '';
 
     #[ORM\Column(length: 255)]
-    private ?string $slug = null;
+    private string $slug = '';
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?DateTimeImmutable $updatedAt = null;
 
+    #[Assert\PositiveOrZero]
     #[ORM\Column(nullable: true)]
     private ?int $duration = null;
 
@@ -54,7 +64,7 @@ class Recipe
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
+    public function setDescription(string $description): static
     {
         $this->description = $description;
 
@@ -73,24 +83,24 @@ class Recipe
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
